@@ -25,6 +25,7 @@ type Settings struct {
 
 type Github struct {
 	Token string `mapstructure:"token"`
+	URL   string `mapstructure:"url"`
 }
 
 type Shortcuts struct {
@@ -48,6 +49,9 @@ func LoadConfig() (*Config, error) {
 
 	viper.SetEnvKeyReplacer(strings.NewReplacer(`.`, `_`))
 	if err := viper.BindEnv("github.token", "GITHUB_TOKEN"); err != nil {
+		return nil, fmt.Errorf("failed to bind environment variable: %w", err)
+	}
+	if err := viper.BindEnv("github.url", "GITHUB_URL"); err != nil {
 		return nil, fmt.Errorf("failed to bind environment variable: %w", err)
 	}
 	viper.AutomaticEnv()

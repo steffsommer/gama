@@ -24,9 +24,8 @@ type Repo struct {
 	Client HttpClient
 
 	githubToken string
+	githubURL   string
 }
-
-var githubAPIURL = "https://api.github.com"
 
 func New(cfg *config.Config) *Repo {
 	return &Repo{
@@ -34,6 +33,7 @@ func New(cfg *config.Config) *Repo {
 			Timeout: 20 * time.Second,
 		},
 		githubToken: cfg.Github.Token,
+		githubURL:   cfg.Github.URL,
 	}
 }
 
@@ -329,7 +329,7 @@ func (r *Repo) CancelWorkflow(ctx context.Context, repository string, runID int6
 
 func (r *Repo) do(ctx context.Context, requestBody any, responseBody any, requestOptions requestOptions) error {
 	// Construct the request URL
-	reqURL, err := joinPath(append([]string{githubAPIURL}, requestOptions.paths...)...)
+	reqURL, err := joinPath(append([]string{r.githubURL}, requestOptions.paths...)...)
 	if err != nil {
 		return fmt.Errorf("failed to join path for api: %w", err)
 	}
